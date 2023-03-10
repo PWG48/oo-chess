@@ -38,12 +38,13 @@ As a player...
 
 
 # What you'll hand in
-* A link to your homework group's github repository.
-* A short written report explaining how your team-members collaborated to complete this assignment;
-
+* A link to your homework group's github repository that will contain:
+   * A working chess program.
+   * A DESIGN.md file that explains the design of your system to a developer wishing to use or extend your system.
+   * A short written report explaining how your team-members collaborated to complete this assignment;
 
 # How you'll get an A
-* I can complete several moves in an interactive session using `python -m chess`.
+* I can clone your repository, start the container, run `python -m chess`, and complete several moves in an interactive session.
 * You have written functional tests to exercise each of the user-stories outlined above.
 * Your code is readable: Meaningful names, comments where apropriate, keep modules, classes, and functions small, etc.
 * Your code is well organized and demonstrates good use of object oriented design principles like:
@@ -52,7 +53,14 @@ As a player...
     * Use of design patterns.
 * Your code has good unit-test coverage.
 * All tests pass.
+* Your Design Document is a good piece of technical writing with sections, descriptive prose, etc.
+* Your Design Document includes UML diagrams:
+      * A class-diagram documenting the classes in the system.
+      * An object-diagram depicting a chess-game after several moves;
+      * An interaction diagram depicting the interaction between objects when:
+         *  A user enters a valid move;
+         *  A user enters an invalid move;
 
 Extra Credit Stories:
 * I want to enter 'resign' to resign and end the game.
-* 
+
