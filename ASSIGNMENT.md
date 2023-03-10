@@ -41,7 +41,7 @@ As a player...
 * A link to your homework group's github repository that will contain:
    * A working chess program.
    * A DESIGN.md file that explains the design of your system to a developer wishing to use or extend your system.
-   * A short written report explaining how your team-members collaborated to complete this assignment;
+   * A RETROSPECTIVE.md file summarizing the agile retrospective meeting you'll hold after you complete the work for this assignment. (Nuclino has a decent description of Agile Retrospectives [here](https://www.nuclino.com/articles/sprint-retrospective-meeting))
 
 # How you'll get an A
 * I can clone your repository, start the container, run `python -m chess`, and complete several moves in an interactive session.
@@ -60,6 +60,10 @@ As a player...
       * An interaction diagram depicting the interaction between objects when:
          *  A user enters a valid move;
          *  A user enters an invalid move;
+* Your retrospective describes: 
+   *  A short narrative of how your team members collaborated.
+   *  A summary of what your team did well.
+   *  A summary of what your team could do better next time.
 
 Extra Credit Stories:
 * I want to enter 'resign' to resign and end the game.
