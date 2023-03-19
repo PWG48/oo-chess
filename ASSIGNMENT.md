@@ -56,7 +56,7 @@ As a player...
 * Your Design Document is a good piece of technical writing with sections, descriptive prose, etc.
 * Your Design Document includes UML diagrams:
       * A class-diagram documenting the classes in the system.
-      * An object-diagram depicting a chess-game after several moves;
+      * An object-diagram depicting a chess-game after several moves.
       * An interaction diagram depicting the interaction between objects when:
          *  A user enters a valid move;
          *  A user enters an invalid move;
@@ -65,6 +65,8 @@ As a player...
    *  A summary of what your team did well.
    *  A summary of what your team could do better next time.
 
-Extra Credit Stories:
-* I want to enter 'resign' to resign and end the game.
+Extra Credit:
+* Set up the GitHub Actions to enable Continuous Integration for your homework group.
+* Use Python's [Abstract Base Class](https://docs.python.org/3/library/abc.html) module where appropriate.
+* Implement another story: I want to enter 'resign' to resign and end the game.
 
