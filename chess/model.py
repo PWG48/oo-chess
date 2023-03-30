@@ -14,8 +14,9 @@ class Board:
 
 class Piece:
     """Abstract base class for chess pieces."""
-    def __init__(self, is_white: bool) -> None:
+    def __init__(self, is_white: bool, is_captured: bool) -> None:
         self._is_white = is_white
+        self._is_captured = is_captured
 
     def __hash__(self):
         return hash((type(self), self._is_white))
@@ -25,8 +26,25 @@ class Piece:
 
 
 class Pawn(Piece):
-    pass
+    def __init__(self, is_white: bool, is_captured: bool) -> None:
+        super().__init__(self, is_white: bool, is_captured: bool)
+        has_castled = False
 
+class King(Piece):
+    def __init__(self, is_white: bool, is_captured: bool) -> None:
+        super().__init__(self, is_white: bool, is_captured: bool)
+
+class Knight(Piece):
+    def __init__(self, is_white: bool, is_captured: bool) -> None:
+        super().__init__(self, is_white: bool, is_captured: bool)
+
+class Bishop(Piece):
+    def __init__(self, is_white: bool, is_captured: bool) -> None:
+        super().__init__(self, is_white: bool, is_captured: bool)
+
+class Rook(Piece):
+    def __init__(self, is_white: bool, is_captured: bool) -> None:
+        super().__init__(self, is_white: bool, is_captured: bool)
 
 class Game:
     def __init__(self):
