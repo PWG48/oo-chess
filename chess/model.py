@@ -27,24 +27,28 @@ class Piece:
 
 class Pawn(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(self, is_white: bool, is_captured: bool)
-        has_castled = False
+        super().__init__(is_white, is_captured)
 
 class King(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(self, is_white: bool, is_captured: bool)
+        super().__init__(is_white, is_captured)
+        has_castled = False
 
+class Queen(Piece):
+    def __init__(self, is_white: bool, is_captured: bool) -> None:
+        super().__init__(is_white, is_captured)
+        
 class Knight(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(self, is_white: bool, is_captured: bool)
+        super().__init__(is_white, is_captured)
 
 class Bishop(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(self, is_white: bool, is_captured: bool)
+        super().__init__(is_white, is_captured)
 
 class Rook(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(self, is_white: bool, is_captured: bool)
+        super().__init__(is_white, is_captured)
 
 class Game:
     def __init__(self):
@@ -59,5 +63,20 @@ class Game:
     def set_up_pieces(self):
         """Place pieces on the board as per the initial setup."""
         for col in 'abcdefgh':
-            self.board.set(f'{col}2', Pawn(is_white=True))
-            self.board.set(f'{col}7', Pawn(is_white=False))
+            self.board.set(f'{col}2', Pawn(is_white=True,is_captured=False))
+            self.board.set(f'{col}7', Pawn(is_white=False,is_captured=False))
+        for col in 'e':    
+            self.board.set(f'{col}1', King(is_white=True,is_captured=False))
+            self.board.set(f'{col}8', King(is_white=False,is_captured=False))
+        for col in 'd':    
+            self.board.set(f'{col}1', Queen(is_white=True,is_captured=False))
+            self.board.set(f'{col}8', Queen(is_white=False,is_captured=False))
+        for col in 'cf':    
+            self.board.set(f'{col}1', Bishop(is_white=True,is_captured=False))
+            self.board.set(f'{col}8', Bishop(is_white=False,is_captured=False))
+        for col in 'bg':    
+            self.board.set(f'{col}1', Knight(is_white=True,is_captured=False))
+            self.board.set(f'{col}8', Knight(is_white=False,is_captured=False))        
+        for col in 'ah':    
+            self.board.set(f'{col}1', Rook(is_white=True,is_captured=False))
+            self.board.set(f'{col}8', Rook(is_white=False,is_captured=False))  
