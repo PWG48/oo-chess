@@ -18,7 +18,7 @@ _PIECE_UNICODES = {
     'King': {True: "\u2654", False: "\u265A"},
     'Queen': {True: "\u2655", False: "\u265B"},
     'Rook': {True: "\u2656", False: "\u265C"},
-    'Bischop': {True: "\u2657", False: "\u265D"},
+    'Bishop': {True: "\u2657", False: "\u265D"},
     'Knight': {True: "\u2658", False: "\u265E"},
     'Pawn': {True: "\u2659", False: "\u265F"},
 }
