@@ -12,6 +12,9 @@ class Board:
     def set(self, location:str, piece: 'Piece'):
         self._squares[location] = piece
 
+    def removepiece(self, location:str):
+        self._squares.pop(location)
+
 class Piece:
     """Abstract base class for chess pieces."""
     def __init__(self, is_white: bool, is_captured: bool) -> None:
@@ -57,8 +60,42 @@ class Game:
         self.game_over = False
 
     def accept_move(self, move):
-        # TODO: Implement updating the board with the give move
+
+        # input validation
+        # non empty
+        if len(move) == 0:
+            return
+        
+        # 4 characters long
+        if len(move) != 4:
+            print('Please enter a move with length 4')
+            return
+        
+        # within bounds of board
+        if move[0] not in 'abcdefgh' or move[1] not in '12345678' or move[2] not in 'abcdefgh' or move[3] not in '12345678':
+            print('Please enter a move within the bounds of the board')
+            return
+
+        # toggle play turn after a valid move
         self.white_to_play = not self.white_to_play
+
+        # source and destination of move
+        source = move[0:2]
+        destination = move[2:4]
+
+        # TODO: Implement rules for each of the pieces
+        #
+        #
+        #
+        
+        # check if the move results in a capture
+        if self.board.get(f'{source}')._is_white != self.board.get(f'{destination}')._is_white:
+            print(f'Capture piece at {destination}')
+            # does recording captures matter? Maybe make a captured piece list
+
+        # make the move
+        self.board.set(f'{destination}', self.board.get(f'{source}'))
+        self.board.removepiece(f'{source}')
 
     def set_up_pieces(self):
         """Place pieces on the board as per the initial setup."""
