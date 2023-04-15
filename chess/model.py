@@ -12,14 +12,21 @@ class Board:
     def set(self, location:str, piece: 'Piece'):
         self._squares[location] = piece
 
-    def removepiece(self, location:str):
+    def removePiece(self, location:str):
         self._squares.pop(location)
+
+    def getColor(self, location:str):
+        return self._squares.get(location, None).getPieceColor()
+
+    def isOccupied(self, location:str):
+        return location in self._squares
 
 class Piece:
     """Abstract base class for chess pieces."""
-    def __init__(self, is_white: bool, is_captured: bool) -> None:
+    def __init__(self, is_white: bool, is_captured: bool, type:str) -> None:
         self._is_white = is_white
         self._is_captured = is_captured
+        self.type = type
 
     def __hash__(self):
         return hash((type(self), self._is_white))
@@ -27,31 +34,34 @@ class Piece:
     def __eq__(self, other: "Piece") -> bool:
         return hash(self) == hash(other)
 
+    def getPieceColor(self):
+        return self._is_white
+    
 
 class Pawn(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(is_white, is_captured)
+        super().__init__(is_white, is_captured, 'pawn')
 
 class King(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(is_white, is_captured)
+        super().__init__(is_white, is_captured, 'king')
         has_castled = False
 
 class Queen(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(is_white, is_captured)
+        super().__init__(is_white, is_captured, 'queen')
         
 class Knight(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(is_white, is_captured)
+        super().__init__(is_white, is_captured, 'knight')
 
 class Bishop(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(is_white, is_captured)
+        super().__init__(is_white, is_captured, 'bishop')
 
 class Rook(Piece):
     def __init__(self, is_white: bool, is_captured: bool) -> None:
-        super().__init__(is_white, is_captured)
+        super().__init__(is_white, is_captured, 'rook')
 
 class Game:
     def __init__(self):
@@ -60,6 +70,10 @@ class Game:
         self.game_over = False
 
     def accept_move(self, move):
+
+        # source and destination of move
+        source = move[0:2]
+        destination = move[2:4]
 
         # input validation
         # non empty
@@ -75,27 +89,35 @@ class Game:
         if move[0] not in 'abcdefgh' or move[1] not in '12345678' or move[2] not in 'abcdefgh' or move[3] not in '12345678':
             print('Please enter a move within the bounds of the board')
             return
-
-        # toggle play turn after a valid move
-        self.white_to_play = not self.white_to_play
-
-        # source and destination of move
-        source = move[0:2]
-        destination = move[2:4]
-
-        # TODO: Implement rules for each of the pieces
-        #
-        #
-        #
         
+        # source space has piece in it
+        if not self.board.isOccupied(source):
+            print('Please choose a source that is occupied')
+            return
+        
+        # source space belongs to player whose turn it is
+        if not self.board.getColor(source) == self.white_to_play:
+            print('Please choose a space occupied by you')
+            return
+
+        # valid move for this piece type
+        if not self.checkMoveValidity(self.board.get(f'{source}'), self.board.getColor(f'{source}'), source, destination):
+            print('Please enter a valid move for this piece')
+            return
+
+
+
         # check if the move results in a capture
-        if self.board.get(f'{source}')._is_white != self.board.get(f'{destination}')._is_white:
+        if self.board.isOccupied(destination) and (self.board.getColor(f'{source}') != self.board.getColor(f'{destination}')):
             print(f'Capture piece at {destination}')
             # does recording captures matter? Maybe make a captured piece list
 
         # make the move
         self.board.set(f'{destination}', self.board.get(f'{source}'))
-        self.board.removepiece(f'{source}')
+        self.board.removePiece(f'{source}')
+
+        # toggle play turn after a valid move
+        self.white_to_play = not self.white_to_play
 
     def set_up_pieces(self):
         """Place pieces on the board as per the initial setup."""
@@ -117,3 +139,29 @@ class Game:
         for col in 'ah':    
             self.board.set(f'{col}1', Rook(is_white=True,is_captured=False))
             self.board.set(f'{col}8', Rook(is_white=False,is_captured=False))  
+
+    # TODO implement rules for how pieces can move
+    def checkMoveValidity(self, piece, color, source, destination):
+
+        validMove = False
+
+        if piece.type == 'pawn':
+            validMove = True
+
+        elif piece.type == 'king':
+            validMove = True
+
+        elif piece.type == 'queen':
+            validMove = True
+
+        elif piece.type == 'knight':
+            validMove = True
+
+        elif piece.type == 'bishop':
+            validMove = True
+
+        elif piece.type == 'rook':
+            validMove = True
+
+
+        return validMove
