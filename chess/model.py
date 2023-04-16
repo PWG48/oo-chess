@@ -3,8 +3,10 @@ from typing import Optional
 
 
 class Board:
+    """Class containing the state of the game board"""
     def __init__(self):
         self._squares = dict()
+        self._lastState = dict()
 
     def get(self, location:str) -> Optional['Piece']:
         return self._squares.get(location, None)
@@ -20,6 +22,12 @@ class Board:
 
     def isOccupied(self, location:str):
         return location in self._squares
+    
+    def saveBoardState(self):
+        self._lastState = self._squares.copy()
+
+    def backupBoard(self):
+        self._squares = self._lastState
 
 class Piece:
     """Abstract base class for chess pieces."""
@@ -64,12 +72,30 @@ class Rook(Piece):
         super().__init__(is_white, is_captured, 'rook')
 
 class Game:
+    """Class to handle mechanics of game, moving pieces, and validating user move commands"""
     def __init__(self):
         self.board = Board()
         self.white_to_play = True
         self.game_over = False
+        self.number_of_moves = 0
+        self.has_backedup = False
 
     def accept_move(self, move):
+
+        # handle backup command
+        if move == 'backup' and self.number_of_moves > 0 and self.has_backedup == False:
+            self.board.backupBoard()
+            self.number_of_moves -= 1
+            self.has_backedup = True
+            self.white_to_play = not self.white_to_play
+            return
+        
+        if move == 'backup' and self.number_of_moves > 0 and self.has_backedup == True:
+            print('Error: Can only back up one move')
+            return
+        
+        if move == 'backup' and self.number_of_moves == 0:
+            return
 
         # source and destination of move
         source = move[0:2]
@@ -107,6 +133,9 @@ class Game:
 
 
 
+        # save the board state for backup commands before the move
+        self.board.saveBoardState()
+
         # check if the move results in a capture
         if self.board.isOccupied(destination) and (self.board.getColor(f'{source}') != self.board.getColor(f'{destination}')):
             print(f'Capture piece at {destination}')
@@ -118,6 +147,12 @@ class Game:
 
         # toggle play turn after a valid move
         self.white_to_play = not self.white_to_play
+
+        # update the total number of moves made
+        self.number_of_moves += 1
+
+        # allow backup again after a move
+        self.has_backedup = False
 
     def set_up_pieces(self):
         """Place pieces on the board as per the initial setup."""
@@ -139,6 +174,10 @@ class Game:
         for col in 'ah':    
             self.board.set(f'{col}1', Rook(is_white=True,is_captured=False))
             self.board.set(f'{col}8', Rook(is_white=False,is_captured=False))  
+
+        # save last state of board
+        self.board.saveBoardState()
+
 
     # TODO implement rules for how pieces can move
     def checkMoveValidity(self, piece, color, source, destination):
