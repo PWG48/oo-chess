@@ -259,11 +259,12 @@ class Game:
 
     # TODO implement rules for how pieces can move
     def checkMoveValidity(self, piece, color, source, destination):
+        """Check if the given move follows the movement rules"""
 
         validMove = False
 
         if piece.getType() == 'pawn':
-            validMove = True
+            validMove = self.checkMoveValidityPawn(piece, color, source, destination)
 
         elif piece.getType() == 'king':
             validMove = True
@@ -282,6 +283,59 @@ class Game:
 
 
         return validMove
+    
+    def checkMoveValidityPawn(self, piece, color, source, destination):
+        """Check movement for pawns"""
+
+        # boolean for if  move is valid
+        validMove = False
+
+        sourceCol = ord(source[0:1])
+        sourceRow = int(source[1:2])
+        destCol = ord(destination[0:1])
+        destRow = int(destination[1:2])
+
+        # pawns can only move rows in one direction, so separate logic for black and white pieces
+        # white pawns
+        if color:
+
+            # first move, not attacking
+            if piece.getHasMoved() == 0 and not self.board.isOccupied(destination):
+                if sourceCol == destCol and (destRow - sourceRow == 1 or destRow - sourceRow == 2):
+                    validMove = True
+                    
+            # not first move, not attacking
+            elif piece.getHasMoved() != 0 and not self.board.isOccupied(destination):
+                if sourceCol == destCol and (destRow - sourceRow == 1):
+                    validMove = True
+
+            # attacking
+            elif self.board.isOccupied(destination) and not self.board.getColor(destination):
+                if destRow - sourceRow == 1 and (abs(sourceCol - destCol) == 1):
+                    validMove = True
+
+
+        # black pawns
+        else:
+
+            # first move, not attacking
+            if piece.getHasMoved() == 0 and not self.board.isOccupied(destination):
+                if sourceCol == destCol and (destRow - sourceRow == -1 or destRow - sourceRow == -2):
+                    validMove = True
+                    
+            # not first move, not attacking
+            elif piece.getHasMoved() != 0 and not self.board.isOccupied(destination):
+                if sourceCol == destCol and (destRow - sourceRow == -1):
+                    validMove = True
+
+            # attacking
+            elif self.board.isOccupied(destination) and not self.board.getColor(destination):
+                if destRow - sourceRow == -1 and (abs(sourceCol - destCol) == 1):
+                    validMove = True
+
+        # return result
+        return validMove
+
     
 
     def checkCastleValidity(self, whiteTurnFlag, sideFlag):
