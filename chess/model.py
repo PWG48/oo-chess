@@ -690,30 +690,12 @@ class Game:
             else:
                 opposingKing = whiteKing
 
-            if piece._type == 'pawn':
-                if self.checkMoveValidityPawn(piece,piece._is_white,coord,opposingKing):
-                    if piece._is_white:
-                        blackCheck = True
-                    else:
-                        whiteCheck = True
-            if piece._type == 'bishop':
-                if self.checkMoveValidityBishop(piece,piece._is_white,coord,opposingKing):
-                    if piece._is_white:
-                        blackCheck = True
-                    else:
-                        whiteCheck = True
-            if piece._type == 'rook':
-                if self.checkMoveValidityRook(piece,piece._is_white,coord,opposingKing):
-                    if piece._is_white:
-                        blackCheck = True
-                    else:
-                        whiteCheck = True
-            if piece._type == 'queen':
-                if self.checkMoveValidityQueen(piece,piece._is_white,coord,opposingKing):
-                    if piece._is_white:
-                        blackCheck = True
-                    else:
-                        whiteCheck = True
+            if self.checkMoveValidity(piece,piece._is_white,coord,opposingKing):
+                if piece._is_white:
+                    blackCheck = True
+                else:
+                    whiteCheck = True
+
 
         return whiteCheck, blackCheck
 
