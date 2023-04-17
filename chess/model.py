@@ -632,5 +632,6 @@ class Game:
                 if not self.board.isOccupied('f1') and not self.board.isOccupied('g1'):
                     castleValid = True
 
+        # TEST CHANGE FOR PUSH
         # return result
         return castleValid
