@@ -107,7 +107,7 @@ def test_move_queen_illegal():
     assert game.board.get('d6') == Queen(is_white=True,is_captured=False)
     assert game.board.get('d1') == None
 
-    game.board.set('h8', Queen(is_white=False,is_captured=False))
+    game.board.set('d8', Queen(is_white=False,is_captured=False))
     assert game.board.get('d8') == Queen(is_white=False,is_captured=False)
     assert game.board.get('h1') == None
     game.accept_move("d8h1") #black to move
