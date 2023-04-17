@@ -11,6 +11,9 @@ class Board:
     def get(self, location:str) -> Optional['Piece']:
         return self._squares.get(location, None)
 
+    def getBoard(self):
+        return self._squares
+
     def set(self, location:str, piece: 'Piece', setupFlag:bool = False):
         self._squares[location] = piece
         if not setupFlag:
@@ -120,6 +123,8 @@ class Game:
         self.game_over = False
         self.number_of_moves = 0
         self.has_backedup = False
+        self.white_in_check = False
+        self.black_in_check = False
 
     def accept_move(self, move):
 
@@ -229,6 +234,13 @@ class Game:
 
         # allow backup again after a move
         self.has_backedup = False
+
+        # check if either player is in check
+        self.white_in_check, self.black_in_check = self.isInCheck()
+        if self.white_in_check:
+            print("White is in check!")
+        elif self.black_in_check:
+            print("Black is in check!")
 
     def set_up_pieces(self):
         """Place pieces on the board as per the initial setup."""
@@ -632,6 +644,57 @@ class Game:
                 if not self.board.isOccupied('f1') and not self.board.isOccupied('g1'):
                     castleValid = True
 
-        # TEST CHANGE FOR PUSH
         # return result
         return castleValid
+
+
+    def isInCheck(self):
+        whiteKing = ''
+        blackKing = ''
+        board = self.board.getBoard()
+        # Identify the squares that each king are on.
+        for coord, piece in board.items():
+            if piece._type == 'king':
+                if piece._is_white:
+                    whiteKing = coord
+                else:
+                    blackKing = coord
+        print(whiteKing)
+        print(blackKing)
+        whiteCheck = False
+        blackCheck = False
+        if whiteKing == '' or blackKing == '':
+            return False, False
+        for coord, piece in board.items():
+            opposingKing = ''
+            if piece._is_white:
+                opposingKing = blackKing
+            else:
+                opposingKing = whiteKing
+
+            if piece._type == 'pawn':
+                if self.checkMoveValidityPawn(piece,piece._is_white,coord,opposingKing):
+                    if piece._is_white:
+                        blackCheck = True
+                    else:
+                        whiteCheck = True
+            if piece._type == 'bishop':
+                if self.checkMoveValidityBishop(piece,piece._is_white,coord,opposingKing):
+                    if piece._is_white:
+                        blackCheck = True
+                    else:
+                        whiteCheck = True
+            if piece._type == 'rook':
+                if self.checkMoveValidityRook(piece,piece._is_white,coord,opposingKing):
+                    if piece._is_white:
+                        blackCheck = True
+                    else:
+                        whiteCheck = True
+            if piece._type == 'queen':
+                if self.checkMoveValidityQueen(piece,piece._is_white,coord,opposingKing):
+                    if piece._is_white:
+                        blackCheck = True
+                    else:
+                        whiteCheck = True
+
+        return whiteCheck, blackCheck
