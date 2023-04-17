@@ -128,6 +128,11 @@ class Game:
 
     def accept_move(self, move):
 
+        # check if it's checkmate
+        if self.isCheckmate():
+            self.game_over = True
+            print("Checkmate!")
+
         # make input lowercase to hanlde both cases
         move = move.lower()
 
@@ -225,6 +230,17 @@ class Game:
         # make the move
         self.board.set(f'{destination}', self.board.get(f'{source}'))
         self.board.removePiece(f'{source}')
+
+        # undo the move if the move resulted in the current player checking their own king.
+        whiteChecked, blackChecked = self.isInCheck()
+        if self.white_to_play and whiteChecked:
+            self.board.backupBoard()
+            print('You can not leave your king in check.')
+            return
+        if not self.white_to_play and blackChecked:
+            self.board.backupBoard()
+            print('You can not leave your king in check.')
+            return
 
         # toggle play turn after a valid move
         self.white_to_play = not self.white_to_play
@@ -649,6 +665,8 @@ class Game:
 
 
     def isInCheck(self):
+        # Checks if either player is in check. returns two booleans that are true if the white or black kings are
+        # checked, respectively.
         whiteKing = ''
         blackKing = ''
         board = self.board.getBoard()
@@ -698,3 +716,46 @@ class Game:
                         whiteCheck = True
 
         return whiteCheck, blackCheck
+
+    def isCheckmate(self):
+        kingMoves = ['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
+                     'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8',
+                     'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8',
+                     'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8',
+                     'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8',
+                     'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8',
+                     'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8',
+                     'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8']
+        whiteKingLoc = ''
+        whiteKingPiece = None
+        blackKingLoc = ''
+        blackKingPiece = None
+
+        board = self.board.getBoard()
+        # Identify the squares that each king are on.
+        for coord, piece in board.items():
+            if piece._type == 'king':
+                if piece._is_white:
+                    whiteKingLoc = coord
+                    whiteKingPiece = piece
+                else:
+                    blackKingLoc = coord
+                    blackKingPiece = piece
+
+        if self.white_to_play and self.white_in_check:
+            whiteIsCheckmated = True
+            for move in kingMoves:
+                if self.checkMoveValidityKing(whiteKingPiece, True, whiteKingLoc,move):
+                    whiteIsCheckmated = False
+            return whiteIsCheckmated
+
+
+        elif not self.white_to_play and self.black_in_check:
+            blackIsCheckmated = True
+            for move in kingMoves:
+                if self.checkMoveValidityKing(blackKingPiece, True, blackKingLoc, move):
+                    blackIsCheckmated = False
+
+            return blackIsCheckmated
+
+        return False
