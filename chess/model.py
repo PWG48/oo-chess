@@ -257,7 +257,6 @@ class Game:
         self.board.saveBoardState()
 
 
-    # TODO implement rules for how pieces can move
     def checkMoveValidity(self, piece, color, source, destination):
         """Check if the given move follows the movement rules"""
 
@@ -267,7 +266,7 @@ class Game:
             validMove = self.checkMoveValidityPawn(piece, color, source, destination)
 
         elif piece.getType() == 'king':
-            validMove = True
+            validMove = self.checkMoveValidityKing(piece, color, source, destination)
 
         elif piece.getType() == 'queen':
             validMove = True
@@ -279,7 +278,7 @@ class Game:
             validMove = True
 
         elif piece.getType() == 'rook':
-            validMove = True
+            validMove = self.checkMoveValidityRook(piece, color, source, destination)
 
 
         return validMove
@@ -329,14 +328,84 @@ class Game:
                     validMove = True
 
             # attacking
-            elif self.board.isOccupied(destination) and not self.board.getColor(destination):
+            elif self.board.isOccupied(destination) and self.board.getColor(destination):
                 if destRow - sourceRow == -1 and (abs(sourceCol - destCol) == 1):
                     validMove = True
 
         # return result
         return validMove
-
     
+    def checkMoveValidityKing(self, piece, color, source, destination):
+        """Check movement for kings"""
+
+        # boolean for if  move is valid
+        validMove = False
+
+        sourceCol = ord(source[0:1])
+        sourceRow = int(source[1:2])
+        destCol = ord(destination[0:1])
+        destRow = int(destination[1:2])
+
+        # can move one square in any direction if the square is not occupied or occupied by opponent
+        if (not self.board.isOccupied(destination)) or (self.board.isOccupied(destination) and color != self.board.getColor(destination)):
+            if abs(sourceCol - destCol) <= 1 and abs(sourceRow - destRow) <= 1:
+                validMove = True
+
+        # return result
+        return validMove
+
+    def checkMoveValidityRook(self, piece, color, source, destination):
+        """Check movement for rooks"""
+
+        # boolean for if  move is valid
+        validMove = False
+
+        sourceCol = ord(source[0:1])
+        sourceRow = int(source[1:2])
+        destCol = ord(destination[0:1])
+        destRow = int(destination[1:2])
+
+        # can move in straight lines along rows or columns
+        if (not self.board.isOccupied(destination)) or (self.board.isOccupied(destination) and color != self.board.getColor(destination)):
+
+            if sourceCol == destCol or sourceRow == destRow:
+                collision = False
+                # same column
+                if sourceCol == destCol:
+                    if sourceRow > destRow:
+                        # check for occupied spaces between source and destination squares
+                        for row in range(destRow + 1, sourceRow):
+                            if self.board.isOccupied(f'{chr(sourceCol)}{row}'):
+                                collision = True
+                                break
+                    elif sourceRow < destRow:
+                        # check for occupied spaces between source and destination squares
+                        for row in range(sourceRow + 1, destRow):
+                            if self.board.isOccupied(f'{chr(sourceCol)}{row}'):
+                                collision = True
+                                break
+                                
+                # same row
+                elif sourceRow == destRow:
+                    if sourceCol > destCol:
+                        # check for occupied spaces between source and destination squares
+                        for col in range(destCol + 1, sourceCol):
+                            if self.board.isOccupied(f'{chr(col)}{sourceRow}'):
+                                collision = True
+                                break
+                    elif sourceCol < destCol:
+                        # check for occupied spaces between source and destination squares
+                        for col in range(sourceCol + 1, destCol):
+                            if self.board.isOccupied(f'{chr(col)}{sourceRow}'):
+                                collision = True
+                                break
+
+                # valid move if no collisions found
+                if not collision:
+                    validMove = True
+
+        # return result
+        return validMove
 
     def checkCastleValidity(self, whiteTurnFlag, sideFlag):
         """check to see if the given castle move is valid"""
