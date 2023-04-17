@@ -1,9 +1,6 @@
 TODO
-- rules for how pieces can move
 - check for check and checkmate
 	- don't allow move if it places you in check
-- castle
-- backup command 
 - complete game on checkmate
 - unit tests
 	- initialize board dictionary to some mid game state
