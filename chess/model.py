@@ -545,7 +545,7 @@ class Game:
         # can move in straight lines along rows or columns
         if (not self.board.isOccupied(destination)) or (self.board.isOccupied(destination) and color != self.board.getColor(destination)):
 
-
+            collision = True
             # same column
             if sourceCol == destCol:
 
