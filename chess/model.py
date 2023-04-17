@@ -129,7 +129,7 @@ class Game:
     def accept_move(self, move):
 
         # check if it's checkmate
-        if self.isCheckmate():
+        if (self.white_in_check or self.black_in_check) and self.isCheckmate():
             self.game_over = True
             print("Checkmate!")
 
@@ -677,8 +677,7 @@ class Game:
                     whiteKing = coord
                 else:
                     blackKing = coord
-        print(whiteKing)
-        print(blackKing)
+
         whiteCheck = False
         blackCheck = False
         if whiteKing == '' or blackKing == '':
@@ -695,8 +694,6 @@ class Game:
                     blackCheck = True
                 else:
                     whiteCheck = True
-
-
         return whiteCheck, blackCheck
 
     def isCheckmate(self):
