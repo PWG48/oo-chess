@@ -118,7 +118,7 @@ def test_move_queen_illegal():
     assert game.board.get('h8') == Queen(is_white=False,is_captured=False)
 
 # tests illegal and legal knight moves for white and black
-def test_move_queen_illegal():
+def test_move_knight_illegal():
     game = Game()
     game.board.set('b1', Knight(is_white=True,is_captured=False))
     assert game.board.get('b1') == Knight(is_white=True,is_captured=False)
