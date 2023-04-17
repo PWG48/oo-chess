@@ -209,8 +209,6 @@ class Game:
             print('Please enter a valid move for this piece')
             return
 
-
-
         # save the board state for backup commands before the move
         self.board.saveBoardState()
 
@@ -235,7 +233,7 @@ class Game:
     def set_up_pieces(self):
         """Place pieces on the board as per the initial setup."""
         for col in 'abcdefgh':
-            #self.board.set(f'{col}2', Pawn(is_white=True,is_captured=False), True)
+            self.board.set(f'{col}2', Pawn(is_white=True,is_captured=False), True)
             self.board.set(f'{col}7', Pawn(is_white=False,is_captured=False), True)
         for col in 'e':    
             self.board.set(f'{col}1', King(is_white=True,is_captured=False), True)
@@ -256,7 +254,6 @@ class Game:
         # save last state of board
         self.board.saveBoardState()
 
-
     def checkMoveValidity(self, piece, color, source, destination):
         """Check if the given move follows the movement rules"""
 
@@ -272,7 +269,7 @@ class Game:
             validMove = self.checkMoveValidityQueen(piece, color, source, destination)
 
         elif piece.getType() == 'knight':
-            validMove = True
+            validMove = self.checkMoveValidityKnight(piece, color, source, destination)
 
         elif piece.getType() == 'bishop':
             validMove = self.checkMoveValidityBishop(piece, color, source, destination)
@@ -453,6 +450,27 @@ class Game:
                 # valid move if no collisions found
                 if not collision:
                     validMove = True
+
+        # return result
+        return validMove
+        
+    def checkMoveValidityKnight(self, piece, color, source, destination):
+        """Check movement for knights"""
+
+        # boolean for if  move is valid
+        validMove = False
+
+        sourceCol = ord(source[0:1])
+        sourceRow = int(source[1:2])
+        destCol = ord(destination[0:1])
+        destRow = int(destination[1:2])
+
+        # can move in L pattern
+        if (not self.board.isOccupied(destination)) or (self.board.isOccupied(destination) and color != self.board.getColor(destination)):
+
+            if (abs(sourceCol - destCol) == 1 and abs(sourceRow - destRow) == 2) \
+            or (abs(sourceCol - destCol) == 2 and abs(sourceRow - destRow) == 1):
+                validMove = True
 
         # return result
         return validMove
