@@ -235,7 +235,7 @@ class Game:
     def set_up_pieces(self):
         """Place pieces on the board as per the initial setup."""
         for col in 'abcdefgh':
-            self.board.set(f'{col}2', Pawn(is_white=True,is_captured=False), True)
+            #self.board.set(f'{col}2', Pawn(is_white=True,is_captured=False), True)
             self.board.set(f'{col}7', Pawn(is_white=False,is_captured=False), True)
         for col in 'e':    
             self.board.set(f'{col}1', King(is_white=True,is_captured=False), True)
@@ -269,13 +269,13 @@ class Game:
             validMove = self.checkMoveValidityKing(piece, color, source, destination)
 
         elif piece.getType() == 'queen':
-            validMove = True
+            validMove = self.checkMoveValidityQueen(piece, color, source, destination)
 
         elif piece.getType() == 'knight':
             validMove = True
 
         elif piece.getType() == 'bishop':
-            validMove = True
+            validMove = self.checkMoveValidityBishop(piece, color, source, destination)
 
         elif piece.getType() == 'rook':
             validMove = self.checkMoveValidityRook(piece, color, source, destination)
@@ -354,6 +354,165 @@ class Game:
         # return result
         return validMove
 
+    def checkMoveValidityQueen(self, piece, color, source, destination):
+        """Check movement for queens"""
+
+        # boolean for if  move is valid
+        validMove = False
+
+        sourceCol = ord(source[0:1])
+        sourceRow = int(source[1:2])
+        destCol = ord(destination[0:1])
+        destRow = int(destination[1:2])
+
+        # can move in straight lines on diagonals or straight lines on row or columns
+        if (not self.board.isOccupied(destination)) or (self.board.isOccupied(destination) and color != self.board.getColor(destination)):
+
+            # moving along diagonal
+            if abs(sourceCol - destCol) == abs(sourceRow - destRow):
+
+                collision = False
+                iteratorList = list(range(abs(destCol - sourceCol)))
+                iteratorList = iteratorList[1:]
+
+                # up and right
+                if sourceCol < destCol and sourceRow < destRow:
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol + iterator)}{sourceRow + iterator}'):
+                            collision = True
+                            break
+
+                # up and left
+                elif sourceCol > destCol and sourceRow < destRow:
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol - iterator)}{sourceRow + iterator}'):
+                            collision = True
+                            break
+
+                # down and right
+                elif sourceCol < destCol and sourceRow > destRow:
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol + iterator)}{sourceRow - iterator}'):
+                            collision = True
+                            break
+
+                # down and left
+                elif sourceCol > destCol and sourceRow > destRow:
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol - iterator)}{sourceRow - iterator}'):
+                            collision = True
+                            break
+
+                # valid move if no collisions found
+                if not collision:
+                    validMove = True
+
+            # moving along row or column
+            elif sourceCol == destCol or sourceRow == destRow:   
+
+                # same column
+                if sourceCol == destCol:
+
+                    collision = False
+                    iteratorList = list(range(abs(destRow - sourceRow)))
+                    iteratorList = iteratorList[1:]
+
+                    if sourceRow > destRow:
+                        # check for occupied spaces between source and destination squares
+                        for iterator in iteratorList:
+                            if self.board.isOccupied(f'{chr(sourceCol)}{sourceRow - iterator}'):
+                                collision = True
+                                break
+                    elif sourceRow < destRow:
+                        # check for occupied spaces between source and destination squares
+                        for iterator in iteratorList:
+                            if self.board.isOccupied(f'{chr(sourceCol)}{sourceRow + iterator}'):
+                                collision = True
+                                break
+
+                # same row
+                elif sourceRow == destRow:
+
+                    collision = False
+                    iteratorList = list(range(abs(destCol - sourceCol)))
+                    iteratorList = iteratorList[1:]
+
+                    if sourceCol > destCol:
+                        # check for occupied spaces between source and destination squares
+                        for iterator in iteratorList:
+                            if self.board.isOccupied(f'{chr(sourceCol - iterator)}{sourceRow }'):
+                                collision = True
+                                break
+                    elif sourceRow < destRow:
+                        # check for occupied spaces between source and destination squares
+                        for iterator in iteratorList:
+                            if self.board.isOccupied(f'{chr(sourceCol + iterator)}{sourceRow}'):
+                                collision = True
+                                break
+
+                # valid move if no collisions found
+                if not collision:
+                    validMove = True
+
+        # return result
+        return validMove
+    
+    def checkMoveValidityBishop(self, piece, color, source, destination):
+        """Check movement for bishops"""
+
+        # boolean for if  move is valid
+        validMove = False
+
+        sourceCol = ord(source[0:1])
+        sourceRow = int(source[1:2])
+        destCol = ord(destination[0:1])
+        destRow = int(destination[1:2])
+
+        # can move in straight lines on diagonals
+        if (not self.board.isOccupied(destination)) or (self.board.isOccupied(destination) and color != self.board.getColor(destination)):
+
+            # moving along diagonal
+            if abs(sourceCol - destCol) == abs(sourceRow - destRow):
+
+                collision = False
+                iteratorList = list(range(abs(destCol - sourceCol)))
+                iteratorList = iteratorList[1:]
+
+                # up and right
+                if sourceCol < destCol and sourceRow < destRow:
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol + iterator)}{sourceRow + iterator}'):
+                            collision = True
+                            break
+
+                # up and left
+                elif sourceCol > destCol and sourceRow < destRow:
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol - iterator)}{sourceRow + iterator}'):
+                            collision = True
+                            break
+
+                # down and right
+                elif sourceCol < destCol and sourceRow > destRow:
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol + iterator)}{sourceRow - iterator}'):
+                            collision = True
+                            break
+
+                # down and left
+                elif sourceCol > destCol and sourceRow > destRow:
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol - iterator)}{sourceRow - iterator}'):
+                            collision = True
+                            break
+
+                # valid move if no collisions found
+                if not collision:
+                    validMove = True
+
+        # return result
+        return validMove
+
     def checkMoveValidityRook(self, piece, color, source, destination):
         """Check movement for rooks"""
 
@@ -368,41 +527,50 @@ class Game:
         # can move in straight lines along rows or columns
         if (not self.board.isOccupied(destination)) or (self.board.isOccupied(destination) and color != self.board.getColor(destination)):
 
-            if sourceCol == destCol or sourceRow == destRow:
-                collision = False
-                # same column
-                if sourceCol == destCol:
-                    if sourceRow > destRow:
-                        # check for occupied spaces between source and destination squares
-                        for row in range(destRow + 1, sourceRow):
-                            if self.board.isOccupied(f'{chr(sourceCol)}{row}'):
-                                collision = True
-                                break
-                    elif sourceRow < destRow:
-                        # check for occupied spaces between source and destination squares
-                        for row in range(sourceRow + 1, destRow):
-                            if self.board.isOccupied(f'{chr(sourceCol)}{row}'):
-                                collision = True
-                                break
-                                
-                # same row
-                elif sourceRow == destRow:
-                    if sourceCol > destCol:
-                        # check for occupied spaces between source and destination squares
-                        for col in range(destCol + 1, sourceCol):
-                            if self.board.isOccupied(f'{chr(col)}{sourceRow}'):
-                                collision = True
-                                break
-                    elif sourceCol < destCol:
-                        # check for occupied spaces between source and destination squares
-                        for col in range(sourceCol + 1, destCol):
-                            if self.board.isOccupied(f'{chr(col)}{sourceRow}'):
-                                collision = True
-                                break
 
-                # valid move if no collisions found
-                if not collision:
-                    validMove = True
+            # same column
+            if sourceCol == destCol:
+
+                collision = False
+                iteratorList = list(range(abs(destRow - sourceRow)))
+                iteratorList = iteratorList[1:]
+
+                if sourceRow > destRow:
+                    # check for occupied spaces between source and destination squares
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol)}{sourceRow - iterator}'):
+                            collision = True
+                            break
+                elif sourceRow < destRow:
+                    # check for occupied spaces between source and destination squares
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol)}{sourceRow + iterator}'):
+                            collision = True
+                            break
+
+            # same row
+            elif sourceRow == destRow:
+
+                collision = False
+                iteratorList = list(range(abs(destCol - sourceCol)))
+                iteratorList = iteratorList[1:]
+
+                if sourceCol > destCol:
+                    # check for occupied spaces between source and destination squares
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol - iterator)}{sourceRow }'):
+                            collision = True
+                            break
+                elif sourceRow < destRow:
+                    # check for occupied spaces between source and destination squares
+                    for iterator in iteratorList:
+                        if self.board.isOccupied(f'{chr(sourceCol + iterator)}{sourceRow}'):
+                            collision = True
+                            break
+
+            # valid move if no collisions found
+            if not collision:
+                validMove = True
 
         # return result
         return validMove
