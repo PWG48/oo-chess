@@ -132,6 +132,14 @@ class Game:
         if (self.white_in_check or self.black_in_check) and self.isCheckmate():
             self.game_over = True
             print("Checkmate!")
+        
+        if move == 'resign':
+            self.game_over = True
+            if self.white_to_play:
+                print('White resigns. Black wins the game!')
+            else:
+                print('Black resigns. White wins the game!')
+            return
 
         # make input lowercase to hanlde both cases
         move = move.lower()
