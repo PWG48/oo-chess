@@ -210,10 +210,12 @@ def test_move_pawn():
 def test_move_king():
     game = Game()
     game.board.set('e1', King(is_white=True,is_captured=False))
+    game.board.set('e8', King(is_white=False,is_captured=False))
     game.board.set('d8', Queen(is_white=False,is_captured=False))
     game.accept_move("e1d1") #move king to check position
-    assert game.board.get('e1') == King(is_white=True,is_captured=False)
     assert game.board.get('d1') == None
+    assert game.board.get('e1') == King(is_white=True,is_captured=False)
+    
     game.accept_move("e1f3") #move king illegaly
     assert game.board.get('e1') == King(is_white=True,is_captured=False)
     assert game.board.get('f3') == None
@@ -222,4 +224,34 @@ def test_move_king():
     assert game.board.get('e1') == King(is_white=True,is_captured=False)
     assert game.board.get('e2') == Pawn(is_white=True,is_captured=False)
     
+#test moving a piece blocking line of sight of an opponents piece on friednly king is allowed
+def test_move_piece_to_check_friendly_king():
+    game = Game()
+    game.board.set('b2', King(is_white=True,is_captured=False))
+    game.board.set('e8', King(is_white=False,is_captured=False))
+    game.board.set('b7', Queen(is_white=False,is_captured=False))
+    game.board.set('b3', Rook(is_white=True,is_captured=False))
+    game.accept_move("b3c3") #move rook away from pinned position leaving its own king in check
+    assert game.board.get('c3') == None
+    assert game.board.get('b3') == Rook(is_white=True,is_captured=False)
+
+#test white resigns
+def test_white_resign():
+    game = Game()
+    game.board.set('d2', King(is_white=True,is_captured=False))
+    game.board.set('f2', Pawn(is_white=True,is_captured=False))
+    game.board.set('g3', Pawn(is_white=True,is_captured=False))
+    game.board.set('a8', Rook(is_white=True,is_captured=False))
+    game.board.set('e7', King(is_white=False,is_captured=False))
+    game.board.set('h8', Pawn(is_white=False,is_captured=False))
+    game.board.set('d4', Pawn(is_white=False,is_captured=False))
+    game.accept_move("resign") #White resign
+    assert game.game_over == True
     
+    #test black resigns
+def test_black_resign():
+    game = Game()
+    game.set_up_pieces()
+    game.accept_move("e2e3") #White moves
+    game.accept_move("resign") #Black resigns
+    assert game.game_over == True
