@@ -65,10 +65,19 @@ test_errors\
         &emsp;&emsp;-Moving the Pawn\
         &emsp;&emsp;-Moving the King/checking itself\
         &emsp;&emsp;-Moving pieces over/through existing pieces\
-        &emsp;&emsp;-Moving to occupied squares of the same color pieces
+        &emsp;&emsp;-Moving to occupied squares of the same color pieces\
+        &emsp;&emsp;-A piece is pinned and cannot move due to the piece blocking line of sight of an enemy piece on the friendly king\
+        &emsp;&emsp;-White Resigns\
+        &emsp;&emsp;-Black Resigns
 
 test_move\
     &emsp;Tests valid move correctly moves the piece
+    
+test_pieces\
+    &emsp;Tests the differentiation of colors of each piece
+    
+test_setup\
+    &emsp;Tests the board setup method accurately places the correct pieces in the correct location
 
 test_undo\
     &emsp;Tests the playering being able to undo the previous move
